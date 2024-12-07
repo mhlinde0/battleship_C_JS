@@ -41,7 +41,7 @@ void createShips(Ship shipArray[4]) {
     shipArray[3] = (Ship){"Patrol Boat", 2, 4, {{0, 0}}};
 }
 
-void chooseAndPlaceShip(int* numberOfShips, int* shipChosen, char* orientation, Ship shipArray[4]){
+void printShipMenuAndPlaceShip(int* numberOfShips, int* shipChosen, char* orientation, Ship shipArray[4]){
     //print ship menu
     printf("\nLedige skibe:\n");
     printf("Nr.    Navn            Antal tilbage     Længde:\n");
