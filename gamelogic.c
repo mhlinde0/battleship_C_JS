@@ -49,11 +49,9 @@ void printShipMenuAndPlaceShip(int* numberOfShips, int* shipChosen, char* orient
         printf("%d:     %-16s%-18d%-7d\n", i, shipArray[i-1].name, shipArray[i-1].amountLeft, shipArray[i-1].length);   
     }
     
-    int stopScanning = false;
     
-
     //get ship from user
-    while(!stopScanning){
+    while(true){
         printf("\nIndtast skib at placere (1-4): ");
         if (scanf("%d", shipChosen) != 1 || *shipChosen < 1 || *shipChosen > 4) {
             printf("Ugyldigt valg! Vælg et skib mellem 1 og 4.\n");
@@ -61,32 +59,34 @@ void printShipMenuAndPlaceShip(int* numberOfShips, int* shipChosen, char* orient
             continue; 
         }
         *shipChosen -= 1;
-        stopScanning = true;
+        break;
     }
-    
 
     //get orientation from user
-    while(!stopScanning){
+    while(true){
         printf("Vælg orientering (v=vandret, l=lodret): ");
         while (getchar() != '\n');
         if (scanf("%c", orientation) != 1 || (*orientation != 'v' && *orientation != 'l')) {
             printf("Ugyldigt valg! Vælg 'v' for vandret eller 'l' for lodret.\n");
             continue;
         }
-        stopScanning = true;
+        break;
     }
-    if(*orientation == 'v') printf("Vandret %s valgt.", shipArray[*shipChosen].name);
-    if(*orientation == 'l') printf("Lodret %s valgt.", shipArray[*shipChosen].name);
-    
+    if(*orientation == 'v') printf("Vandret %s valgt.\n", shipArray[*shipChosen].name);
+    if(*orientation == 'l') printf("Lodret %s valgt.\n", shipArray[*shipChosen].name);
 
+}
+
+void placeShip(char board[ROWS][COLS], char *orientation, Ship shipArray[4], int *shipChosen){
     //get coords from user
-    int ycoord = 0;
-    char xcoord = 0;
+    printf("\nVælg koordinat for placering af skib.\n(Skriv: \"x,y\") (NB. L går op fra koordinat, V til højre): ");
 
-    printf("\nVælg koordinat for placering af skib (eg. A4. L går op fra koordinat, V til højre): ");
+    //get x and y coords from user
+    int xCoord = 0, yCoord = 0;
 
-    while(!stopScanning){
-        char buffer[3] = {0};
+    while(true){
+        while (getchar() != '\n');
+        char buffer[8] = {0};
         
         // Checks for null inputs
         if (fgets(buffer, sizeof(buffer), stdin) == NULL) {
@@ -102,14 +102,22 @@ void printShipMenuAndPlaceShip(int* numberOfShips, int* shipChosen, char* orient
             continue;
         }
 
-        if (sscanf(buffer, "%c%d", &xcoord, &ycoord) != 2) {
+        if (sscanf(buffer, "%d,%d", &xCoord, &yCoord) != 2) {
             printf("Invalid input! Try again: ");
             continue;
         } 
         
-        stopScanning = true;
+        break;
     }
 
-    printf("%c, %d", xcoord, ycoord);
-
+    if(*orientation == 'v'){
+        for(int i = yCoord; i < (yCoord + shipArray[*shipChosen].length); i++){
+            board[xCoord][i] = 'S';
+        }
+    }
+    else {
+        for(int i = xCoord; i < (xCoord + shipArray[*shipChosen].length); i++){
+            board[xCoord][i] = 'S';
+        }
+    }
 }

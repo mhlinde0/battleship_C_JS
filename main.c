@@ -7,16 +7,15 @@ int main(void) {
 
     initialiseBoard(board);
     createShips(shipArray);
-
-    printBoard(board);
-    
+   
     int numberOfShips = NUMBER_OF_SHIPS;
     int shipChosen = 0;
     char orientation = 0;
 
-    printChooseShipMenu(&numberOfShips, &shipChosen, &orientation, shipArray);
-
-
+    printShipMenuAndPlaceShip(&numberOfShips, &shipChosen, &orientation, shipArray);
+    printBoard(board);
+    placeShip(board, &orientation, shipArray, &shipChosen);
+    printBoard(board);
 
     return 0;
 }
