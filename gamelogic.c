@@ -7,30 +7,33 @@
 void initialiseBoard(char board[ROWS][COLS]) {
     for(int i = 0; i < ROWS; i++){
         for(int j = 0; j < COLS; j++){
-            board[i][j] = '?';
+            board[i][j] = '~';
         }
     }
 }
 
 void printBoard (char board[ROWS][COLS]){
-    for(int i = 0; i < ROWS; i++){
-        // Udskriv kolonnenumre
-        if(i == 0){
-            printf("    ");
-            for(int k = 0; k < COLS; k++){
-                printf("%d ", k);
-            }
-            printf("\n\n");
-        }
+    printf("\n");
 
+    for(int i = 0; i < ROWS; i++){
         // Udskriv række-nr og felter
         for(int j = 0; j < COLS; j++){
             if(j == 0){
-                printf("%d   ", i);  // Rækkenumre i starten af hver række
+                printf("%d   ", (ROWS-1-i));  // Rækkenumre i starten af hver række
             }
             printf("%c ", board[i][j]);
         }
         printf("\n");  // Ny linje efter hver række
+
+        // Udskriv kolonnenumre
+        if(i == (ROWS-1)){
+            printf("\n");
+            printf("    ");
+            for(int k = 0; k < COLS; k++){
+                printf("%d ", k);
+            }
+            printf("\n");
+        }
     }
 }
 
@@ -79,7 +82,7 @@ void printShipMenuAndPlaceShip(int* numberOfShips, int* shipChosen, char* orient
 
 void placeShip(char board[ROWS][COLS], char *orientation, Ship shipArray[4], int *shipChosen){
     //get coords from user
-    printf("\nVælg koordinat for placering af skib.\n(Skriv: \"x,y\") (NB. L går op fra koordinat, V til højre): ");
+    printf("\nVælg koordinat for placering af skib.\n(Skriv: \"x,y\") (NB. V går til højre fra koordinat, L går ned): ");
 
     //get x and y coords from user
     int xCoord = 0, yCoord = 0;
@@ -110,14 +113,21 @@ void placeShip(char board[ROWS][COLS], char *orientation, Ship shipArray[4], int
         break;
     }
 
+    
+    int mapping[] = {9, 8, 7, 6, 5, 4, 3, 2, 1, 0}; 
+
+    /* mapping bruges til at konvertere yCoord til korrekt index i board, da input og board-indekser er "invers" eg. input 8 = indeks 2.
+    Ved 'v': Start ved xCoord og marker skibets længde mod højre i samme row. yCoord (row) er fast og bruges via mapping.
+    Ved 'l': Start ved yCoord og marker skibets længde nedad i samme kolonne. xCoord (kolonne) er fast. */
+
     if(*orientation == 'v'){
-        for(int i = yCoord; i < (yCoord + shipArray[*shipChosen].length); i++){
-            board[xCoord][i] = 'S';
+        for(int i = xCoord; i < xCoord + shipArray[*shipChosen].length; i++){
+            board[mapping[yCoord]][i] = 'S';
         }
     }
-    else {
-        for(int i = xCoord; i < (xCoord + shipArray[*shipChosen].length); i++){
-            board[xCoord][i] = 'S';
+    if(*orientation == 'l') {
+        for(int i = mapping[yCoord]; i < (mapping[yCoord] + shipArray[*shipChosen].length); i++){
+            board[i][xCoord] = 'S';
         }
     }
 }
